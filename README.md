@@ -19,6 +19,8 @@ A comprehensive web application designed to manage applications for social assis
 
 The Social Assistance Information System (SAIS) streamlines the management of social assistance program applications. The system supports multiple programs including OVC (Orphans and Vulnerable Children), PWD (Persons with Disabilities), and Elderly assistance programs.
 
+**Important Note**: SAIS has been designed as a simple, demonstration-ready application without authentication systems. This makes it ideal for testing, demonstrations, and development environments.
+
 ## Prerequisites
 
 Before setting up SAIS, ensure you have the following installed:
@@ -459,13 +461,27 @@ After creating an applicant, attach them to relevant social assistance programs:
 #### Step 3: Application Processing
 - **Status Tracking**: Monitor application progress through statuses:
   - Draft → Submitted → Approved/Rejected
+- **Status Management**: 
+  - **Edit Page**: Change application status directly (Approved, Rejected, etc.) as confirmation
+  - **Details Page**: View complete application information and current status
+  - **No Authentication Required**: Status changes can be made directly without login credentials
 - **Approval Workflow**: 
-  - Review applicant details
-  - Verify eligibility criteria
-  - Approve or reject with comments
-  - Record approval date and approving officer
+  - Review applicant details on the Details page
+  - Use Edit page to update status based on eligibility verification
+  - Record approval date and approving officer information
+
+#### Step 4: SMS Notifications
+- **Automatic Notifications**: When an application is submitted, the system sends SMS notifications
+- **Development Mode**: SMS messages are displayed in the console log for testing purposes
+- **No Live SMS API**: The system uses a dummy SMS service - no actual SMS messages are sent
+- **Console Output**: Check the application console/logs to see SMS notification content
 
 ### 4. Application Management Features
+
+**Key Application Pages:**
+- **Details Page**: View comprehensive application information, applicant details, and current status
+- **Edit Page**: Modify application details and change status (Draft, Submitted, Approved, Rejected)
+- **Index Page**: Browse all applications with filtering and search capabilities
 
 **Search and Filter:**
 - Filter by application status
@@ -473,11 +489,21 @@ After creating an applicant, attach them to relevant social assistance programs:
 - Filter by program type
 - Geographic filtering (by county, sub-county, etc.)
 
+**Status Management:**
+- Direct status updates without authentication requirements
+- Real-time status changes from the Edit page
+- Status history tracking
+
 **Reporting:**
 - Generate reports by program
 - Geographic distribution reports
 - Application status summaries
 - Approval/rejection statistics
+
+**SMS Notifications:**
+- Automatic dummy SMS sent on application submission
+- SMS content displayed in console logs for development/testing
+- No actual SMS delivery (demonstration purposes)
 
 **Data Management:**
 - Bulk import capabilities (if configured)
@@ -485,28 +511,56 @@ After creating an applicant, attach them to relevant social assistance programs:
 - Audit trail tracking
 - Data validation and verification
 
-### 5. Best Practices for Usage
+### 5. Application Features & Limitations
+
+**Simplified Design:**
+- **No Authentication**: The application intentionally omits authentication systems for simplicity
+- **Direct Access**: All features are accessible without login credentials
+- **Demo-Ready**: Perfect for demonstrations, testing, and development environments
+
+**Application Status Management:**
+- **Edit Page**: Change application status directly to Approved, Rejected, or any other status
+- **Immediate Updates**: Status changes take effect immediately without approval workflows
+- **Details Page**: View complete application information and track status history
+
+**SMS Notifications:**
+- **Dummy SMS Service**: SMS notifications are simulated for development purposes
+- **Console Logging**: SMS content appears in the application console/logs
+- **No Live Integration**: No actual SMS messages are sent to phone numbers
+- **Development Testing**: Perfect for testing notification workflows without SMS costs
+
+**Security Considerations:**
+- **Development Use**: Intended for development, testing, and demonstration environments
+- **Production Deployment**: Consider adding authentication and authorization before production use
+- **Data Protection**: Implement appropriate security measures for sensitive applicant data
+
+### 6. Best Practices for Usage
 
 1. **Setup Sequence**: Always configure lookups and geographic data before creating applications
 2. **Data Consistency**: Use standardized codes for geographic hierarchy
-3. **Regular Maintenance**: Periodically review and update lookup values
-4. **Geographic Accuracy**: Ensure village-level data is accurate for proper beneficiary tracking
-5. **Program Management**: Regularly review program eligibility and update criteria as needed
+3. **Status Management**: Use Edit page for direct status updates and Details page for information review
+4. **SMS Testing**: Monitor console logs to verify SMS notification content during testing
+5. **Regular Maintenance**: Periodically review and update lookup values
+6. **Geographic Accuracy**: Ensure village-level data is accurate for proper beneficiary tracking
+7. **Program Management**: Regularly review program eligibility and update criteria as needed
 
-### 6. User Workflow Summary
+### 7. User Workflow Summary
 
 ```
 System Setup:
 Lookups → Geographic Hierarchy → Programs
 
 Application Process:
-Create Applicant → Select Location → Attach Programs → Process Application
+Create Applicant → Select Location → Attach Programs → Submit Application → SMS Logged
 
-Management:
-Track Status → Generate Reports → Manage Data
+Application Management:
+Details Page (View) → Edit Page (Change Status) → Track Progress
+
+Development Features:
+Console SMS Logs → Direct Status Updates → No Authentication Required
 ```
 
-This workflow ensures proper data organization and efficient processing of social assistance applications.
+This simplified workflow ensures easy testing and demonstration while maintaining core functionality for social assistance application management.
 
 ## Database Structure
 
