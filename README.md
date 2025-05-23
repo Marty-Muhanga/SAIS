@@ -11,6 +11,7 @@ A comprehensive web application designed to manage applications for social assis
 - [Configuration](#configuration)
 - [Database Initialization](#database-initialization)
 - [Running the Application](#running-the-application)
+- [Using the Application](#using-the-application)
 - [Database Structure](#database-structure)
 - [Contributing](#contributing)
 
@@ -376,6 +377,136 @@ Then deploy the published files to your IIS server.
 - Database seeding is disabled by default in production
 - Enable seeding in production only if you're deploying to a fresh database
 - The application includes retry policies for database connections to handle transient failures
+
+## Using the Application
+
+Once your SAIS application is running, follow these steps to set up and use the system effectively:
+
+### 1. Configure System Parameters
+
+**Navigate to the Lookups Page** to configure essential system parameters:
+
+- **Sex Types**: Male, Female, Other (pre-configured)
+- **Marital Status**: Single, Married, Divorced, Widowed, Separated (pre-configured)
+- **Application Status**: Draft, Submitted, Approved, Rejected (pre-configured)
+- **Custom Parameters**: Add any additional lookup values specific to your organization's needs
+
+The lookups page allows you to:
+- Add new lookup values
+- Edit existing parameters
+- Maintain system-wide consistency
+
+### 2. Set Up Geographic Hierarchy
+
+**Use the Locations Page** to create your geographic structure following Kenya's administrative hierarchy:
+
+**Step-by-Step Location Setup:**
+
+1. **Counties**: Start by creating or verifying county records
+   - Navigate to Counties section
+   - Add counties with proper codes (e.g., "001" for Nairobi)
+
+2. **Sub-Counties**: Create sub-counties under each county
+   - Link each sub-county to its parent county
+   - Use hierarchical codes (e.g., "001-001" for Westlands under Nairobi)
+
+3. **Locations**: Add locations within each sub-county
+   - Continue the coding pattern (e.g., "001-001-001" for Parklands)
+
+4. **Sub-Locations**: Create sub-locations under locations
+   - Maintain coding consistency (e.g., "001-001-001-001")
+
+5. **Villages**: Add villages as the most granular level
+   - Complete the hierarchy (e.g., "001-001-001-001-001")
+
+**Geographic Hierarchy Example:**
+```
+County: Nairobi (001)
+├── Sub-County: Westlands (001-001)
+    ├── Location: Parklands (001-001-001)
+        ├── Sub-Location: Parklands Central (001-001-001-001)
+            └── Village: Parklands Estate (001-001-001-001-001)
+```
+
+### 3. Create and Manage Applications
+
+**Application Creation Process:**
+
+#### Step 1: Create an Applicant
+Navigate to the Applicants section and provide:
+- **Personal Information**: 
+  - First Name, Middle Name, Last Name
+  - Age, Sex (from lookup)
+  - ID Number, Marital Status (from lookup)
+- **Contact Details**:
+  - Physical Address, Postal Address
+  - Telephone, Email
+- **Geographic Location**:
+  - Select Village (which automatically determines Sub-Location, Location, Sub-County, and County)
+- **Additional Information**:
+  - Application Date (auto-generated)
+  - Digital Signature (optional)
+
+#### Step 2: Attach Programs
+After creating an applicant, attach them to relevant social assistance programs:
+- **Available Programs**:
+  - OVC (Orphans and Vulnerable Children)
+  - PWD (Persons with Disabilities) 
+  - Elderly Support
+  - Extreme Poverty Support
+  - Other Programs
+
+#### Step 3: Application Processing
+- **Status Tracking**: Monitor application progress through statuses:
+  - Draft → Submitted → Approved/Rejected
+- **Approval Workflow**: 
+  - Review applicant details
+  - Verify eligibility criteria
+  - Approve or reject with comments
+  - Record approval date and approving officer
+
+### 4. Application Management Features
+
+**Search and Filter:**
+- Filter by application status
+- Search by applicant name or ID number
+- Filter by program type
+- Geographic filtering (by county, sub-county, etc.)
+
+**Reporting:**
+- Generate reports by program
+- Geographic distribution reports
+- Application status summaries
+- Approval/rejection statistics
+
+**Data Management:**
+- Bulk import capabilities (if configured)
+- Export functionality
+- Audit trail tracking
+- Data validation and verification
+
+### 5. Best Practices for Usage
+
+1. **Setup Sequence**: Always configure lookups and geographic data before creating applications
+2. **Data Consistency**: Use standardized codes for geographic hierarchy
+3. **Regular Maintenance**: Periodically review and update lookup values
+4. **Geographic Accuracy**: Ensure village-level data is accurate for proper beneficiary tracking
+5. **Program Management**: Regularly review program eligibility and update criteria as needed
+
+### 6. User Workflow Summary
+
+```
+System Setup:
+Lookups → Geographic Hierarchy → Programs
+
+Application Process:
+Create Applicant → Select Location → Attach Programs → Process Application
+
+Management:
+Track Status → Generate Reports → Manage Data
+```
+
+This workflow ensures proper data organization and efficient processing of social assistance applications.
 
 ## Database Structure
 
