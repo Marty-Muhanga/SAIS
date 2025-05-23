@@ -1,0 +1,336 @@
+@model SAIS.Controllers.LookupViewModel
+
+@{
+    ViewData["Title"] = "Lookup Management";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Page Header -->
+            <div class="page-header mb-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h1 class="h3 mb-0 text-white">
+                            <i class="fas fa-cogs me-2"></i>
+                            Lookup Management
+                        </h1>
+                        <p class="text-white-50 mb-0">Manage system lookup values and reference data</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sex Lookup -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-venus-mars me-2"></i>
+                        Sex Lookup
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Name</th>
+                                            <th width="120">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.SexLookup)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <span class="badge bg-light text-dark">@item.SexCode</span>
+                                                </td>
+                                                <td>@item.SexName</td>
+                                                <td>
+                                                    <button class="btn btn-outline-primary btn-sm me-1">Edit</button>
+                                                    <button class="btn btn-outline-danger btn-sm">Delete</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="bg-light p-4 rounded">
+                                <h6 class="text-primary mb-3">Add New Sex</h6>
+                                <form asp-action="AddSex">
+                                    <div class="mb-3">
+                                        <label for="SexCode" class="form-label">Code</label>
+                                        <input name="SexCode" class="form-control" placeholder="Enter code" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="SexName" class="form-label">Name</label>
+                                        <input name="SexName" class="form-control" placeholder="Enter name" />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Add Sex</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Marital Status Lookup -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-heart me-2"></i>
+                        Marital Status Lookup
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Name</th>
+                                            <th width="120">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.MaritalStatusLookup)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <span class="badge bg-light text-dark">@item.StatusCode</span>
+                                                </td>
+                                                <td>@item.StatusName</td>
+                                                <td>
+                                                    <button class="btn btn-outline-primary btn-sm me-1">Edit</button>
+                                                    <button class="btn btn-outline-danger btn-sm">Delete</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="bg-light p-4 rounded">
+                                <h6 class="text-info mb-3">Add New Marital Status</h6>
+                                <form asp-action="AddMaritalStatus">
+                                    <div class="mb-3">
+                                        <label for="StatusCode" class="form-label">Code</label>
+                                        <input name="StatusCode" class="form-control" placeholder="Enter code" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="StatusName" class="form-label">Name</label>
+                                        <input name="StatusName" class="form-control" placeholder="Enter name" />
+                                    </div>
+                                    <button type="submit" class="btn btn-info w-100">Add Marital Status</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Application Status Lookup -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-flag me-2"></i>
+                        Application Status Lookup
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Name</th>
+                                            <th width="120">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.ApplicationStatusLookup)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <span class="badge bg-light text-dark">@item.StatusCode</span>
+                                                </td>
+                                                <td>@item.StatusName</td>
+                                                <td>
+                                                    <button class="btn btn-outline-primary btn-sm me-1">Edit</button>
+                                                    <button class="btn btn-outline-danger btn-sm">Delete</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="bg-light p-4 rounded">
+                                <h6 class="text-warning mb-3">Add New Application Status</h6>
+                                <form asp-action="AddApplicationStatus">
+                                    <div class="mb-3">
+                                        <label for="StatusCode" class="form-label">Code</label>
+                                        <input name="StatusCode" class="form-control" placeholder="Enter code" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="StatusName" class="form-label">Name</label>
+                                        <input name="StatusName" class="form-control" placeholder="Enter name" />
+                                    </div>
+                                    <button type="submit" class="btn btn-warning w-100">Add Application Status</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Programs -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list-check me-2"></i>
+                        Social Assistance Programs
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Code</th>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                            <th width="120">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.Programs)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <span class="badge bg-light text-dark">@item.ProgramCode</span>
+                                                </td>
+                                                <td>@item.ProgramName</td>
+                                                <td>
+                                                    <small>@item.Description</small>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-outline-primary btn-sm me-1">Edit</button>
+                                                    <button class="btn btn-outline-danger btn-sm">Delete</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="bg-light p-4 rounded">
+                                <h6 class="text-success mb-3">Add New Program</h6>
+                                <form asp-action="AddProgram">
+                                    <div class="mb-3">
+                                        <label for="ProgramCode" class="form-label">Code</label>
+                                        <input name="ProgramCode" class="form-control" placeholder="Enter code" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="ProgramName" class="form-label">Name</label>
+                                        <input name="ProgramName" class="form-control" placeholder="Enter name" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="Description" class="form-label">Description</label>
+                                        <textarea name="Description" class="form-control" rows="3" placeholder="Enter description"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-success w-100">Add Program</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .page-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 0.5rem;
+    }
+
+    .card {
+        border: none;
+        border-radius: 0.75rem;
+        overflow: hidden;
+    }
+
+    .card-header {
+        border-bottom: none;
+        padding: 1rem 1.5rem;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .form-control, .form-select {
+        border: 2px solid #e5e7eb;
+        border-radius: 0.5rem;
+        transition: all 0.2s ease;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+    .shadow-sm {
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+    }
+
+    .table th {
+        background-color: #f8fafc;
+        border-bottom: 2px solid #e5e7eb;
+        font-weight: 600;
+        color: #374151;
+        padding: 0.75rem;
+    }
+
+    .table td {
+        padding: 0.75rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f8fafc;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        font-weight: 500;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .bg-light {
+        background-color: #f8fafc !important;
+    }
+</style>

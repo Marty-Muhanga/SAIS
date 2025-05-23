@@ -1,0 +1,478 @@
+@model SAIS.ViewModels.ApplicantViewModel
+
+@{
+    ViewData["Title"] = "Edit Application";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-12 col-xl-10">
+            <!-- Page Header -->
+            <div class="page-header mb-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h1 class="h3 mb-0 text-gray-800">
+                            <i class="fas fa-edit me-2 text-primary"></i>
+                            Edit Application
+                        </h1>
+                        <p class="text-muted mb-0">Update the applicant details and assistance programmes</p>
+                    </div>
+                    <div>
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>
+                            Back to Applications
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <form asp-action="Edit" id="applicationForm">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                <input type="hidden" asp-for="ApplicantID" />
+
+                <!-- Personal Information Card -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user me-2"></i>
+                            Personal Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Name Fields -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label asp-for="FirstName" class="form-label fw-semibold">
+                                    First Name <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="FirstName" class="form-control form-control-lg" placeholder="Enter first name" />
+                                <span asp-validation-for="FirstName" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="MiddleName" class="form-label fw-semibold">Middle Name</label>
+                                <input asp-for="MiddleName" class="form-control form-control-lg" placeholder="Enter middle name" />
+                                <span asp-validation-for="MiddleName" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="LastName" class="form-label fw-semibold">
+                                    Last Name <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="LastName" class="form-control form-control-lg" placeholder="Enter last name" />
+                                <span asp-validation-for="LastName" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Basic Details -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-lg-3 col-md-6">
+                                <label asp-for="SexID" class="form-label fw-semibold">
+                                    Gender <span class="text-danger">*</span>
+                                </label>
+                                <select asp-for="SexID" class="form-select form-select-lg" asp-items="@(new SelectList(Model.SexOptions ?? new List<SexLookup>(), "SexID", "SexName"))">
+                                    <option value="">-- Select Gender --</option>
+                                </select>
+                                <span asp-validation-for="SexID" class="text-danger small"></span>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label asp-for="Age" class="form-label fw-semibold">
+                                    Age <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Age" class="form-control form-control-lg" placeholder="Enter age" type="number" min="1" max="120" />
+                                <span asp-validation-for="Age" class="text-danger small"></span>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label asp-for="MaritalStatusID" class="form-label fw-semibold">Marital Status</label>
+                                <select asp-for="MaritalStatusID" class="form-select form-select-lg" asp-items="@(new SelectList(Model.MaritalStatusOptions ?? new List<MaritalStatusLookup>(), "MaritalStatusID", "StatusName"))">
+                                    <option value="">-- Select Status --</option>
+                                </select>
+                                <span asp-validation-for="MaritalStatusID" class="text-danger small"></span>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label asp-for="IDNumber" class="form-label fw-semibold">
+                                    ID Number <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="IDNumber" class="form-control form-control-lg" placeholder="Enter ID number" />
+                                <span asp-validation-for="IDNumber" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Address Information -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="PostalAddress" class="form-label fw-semibold">Postal Address</label>
+                                <input asp-for="PostalAddress" class="form-control form-control-lg" placeholder="P.O. Box 123, City" />
+                                <span asp-validation-for="PostalAddress" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="PhysicalAddress" class="form-label fw-semibold">Physical Address</label>
+                                <input asp-for="PhysicalAddress" class="form-control form-control-lg" placeholder="Street, Building, Estate" />
+                                <span asp-validation-for="PhysicalAddress" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Telephone" class="form-label fw-semibold">
+                                    Phone Number <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    <input asp-for="Telephone" class="form-control form-control-lg" placeholder="+254 700 123 456" />
+                                </div>
+                                <span asp-validation-for="Telephone" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Email" class="form-label fw-semibold">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input asp-for="Email" class="form-control form-control-lg" placeholder="example@email.com" type="email" />
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location & Administrative Details Card -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            Location & Administrative Details
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Geographic Hierarchy -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-lg-3 col-md-6">
+                                <label for="countyId" class="form-label fw-semibold">
+                                    County <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select form-select-lg" id="countyId" asp-items="@(new SelectList(Model.CountyOptions ?? new List<County>(), "CountyID", "CountyName"))">
+                                    <option value="">-- Select County --</option>
+                                    @if (Model.CountyID.HasValue)
+                                    {
+                                        <option value="@Model.CountyID" selected>@Model.CountyOptions?.FirstOrDefault(c => c.CountyID == Model.CountyID)?.CountyName</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label for="subCountyId" class="form-label fw-semibold">Sub County</label>
+                                <select class="form-select form-select-lg" id="subCountyId" disabled>
+                                    <option value="">-- Select Sub County --</option>
+                                    @if (Model.SubCountyID.HasValue)
+                                    {
+                                        <option value="@Model.SubCountyID" selected>@Model.SubCountyOptions?.FirstOrDefault(c => c.SubCountyID == Model.SubCountyID)?.SubCountyName</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label for="locationId" class="form-label fw-semibold">Location</label>
+                                <select class="form-select form-select-lg" id="locationId" disabled>
+                                    <option value="">-- Select Location --</option>
+                                    @if (Model.LocationID.HasValue)
+                                    {
+                                        <option value="@Model.LocationID" selected>@Model.LocationOptions?.FirstOrDefault(c => c.LocationID == Model.LocationID)?.LocationName</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <label for="subLocationId" class="form-label fw-semibold">Sub Location</label>
+                                <select class="form-select form-select-lg" id="subLocationId" disabled>
+                                    <option value="">-- Select Sub Location --</option>
+                                    @if (Model.SubLocationID.HasValue)
+                                    {
+                                        <option value="@Model.SubLocationID" selected>@Model.SubLocationOptions?.FirstOrDefault(c => c.SubLocationID == Model.SubLocationID)?.SubLocationName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-lg-4 col-md-6">
+                                <label asp-for="VillageID" class="form-label fw-semibold">Village</label>
+                                <select asp-for="VillageID" class="form-select form-select-lg" id="villageID" disabled>
+                                    <option value="">-- Select Village --</option>
+                                    @if (Model.VillageID != null)
+                                    {
+                                        <option value="@Model.VillageID" selected>@Model.VillageOptions?.FirstOrDefault(c => c.VillageID == Model.VillageID)?.VillageName</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="VillageID" class="text-danger small"></span>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <label asp-for="ApplicationDate" class="form-label fw-semibold">
+                                    Application Date <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="ApplicationDate" class="form-control form-control-lg" type="date" />
+                                <span asp-validation-for="ApplicationDate" class="text-danger small"></span>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <label asp-for="StatusID" class="form-label fw-semibold">Application Status</label>
+                                <select asp-for="StatusID" class="form-select form-select-lg" asp-items="@(new SelectList(Model.StatusOptions ?? new List<ApplicationStatusLookup>(), "StatusID", "StatusName"))">
+                                    <option value="">-- Select Status --</option>
+                                </select>
+                                <span asp-validation-for="StatusID" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Programme Selection Card -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list-check me-2"></i>
+                            Social Assistance Programmes
+                        </h5>
+                        <small class="opacity-75">Select all programmes that apply</small>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.ProgramOptions != null && Model.ProgramOptions.Any())
+                        {
+                            <div class="row g-3">
+                                @foreach (var program in Model.ProgramOptions)
+                                {
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="form-check form-check-card h-100">
+                                            <input class="form-check-input" type="checkbox" name="SelectedProgramIds" value="@program.ProgramID" id="program-@program.ProgramID"
+                                                   @(Model.SelectedProgramIds != null && Model.SelectedProgramIds.Contains(program.ProgramID) ? "checked" : "")>
+                                            <label class="form-check-label w-100 p-3 border rounded" for="program-@program.ProgramID">
+                                                <div class="fw-semibold text-primary">@program.ProgramName</div>
+                                                <small class="text-muted">Click to select this programme</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning" role="alert">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                No programmes available at this time.
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="text-muted small">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Fields marked with <span class="text-danger">*</span> are required
+                            </div>
+                            <div class="btn-group" role="group">
+                                <a asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fas fa-times me-1"></i>
+                                    Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-save me-1"></i>
+                                    Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            // Enhanced form validation feedback
+            $('#applicationForm').on('submit', function() {
+                $(this).find('button[type="submit"]').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>Processing...');
+            });
+
+            // Enhanced cascading dropdowns with loading states
+            function setLoading(elementId, isLoading) {
+                const element = $('#' + elementId);
+                if (isLoading) {
+                    element.prop('disabled', true).html('<option value="">Loading...</option>');
+                } else {
+                    element.prop('disabled', false);
+                }
+            }
+
+            function resetDropdowns(fromLevel) {
+                const dropdowns = ['subCountyId', 'locationId', 'subLocationId', 'villageID'];
+                const startIndex = Math.max(0, fromLevel);
+
+                for (let i = startIndex; i < dropdowns.length; i++) {
+                    const dropdown = $('#' + dropdowns[i]);
+                    dropdown.empty().append('<option value="">-- Select ' + dropdown.prev('label').text() + ' --</option>');
+                    dropdown.prop('disabled', true);
+                }
+            }
+
+            // County change handler - uses LocationsController
+            $("#countyId").change(function () {
+                var countyId = $(this).val();
+                resetDropdowns(0);
+
+                if (countyId) {
+                    setLoading('subCountyId', true);
+                    $.getJSON("/Locations/GetSubCountiesByCounty", { countyId: countyId })
+                        .done(function (data) {
+                            $("#subCountyId").empty().append('<option value="">-- Select Sub County --</option>');
+                            $.each(data, function (index, item) {
+                                $("#subCountyId").append('<option value="' + item.subCountyID + '">' + item.subCountyName + '</option>');
+                            });
+                            $("#subCountyId").prop('disabled', false);
+
+                            // If editing and we have a SubCountyID, select it
+                            @if (Model.SubCountyID.HasValue)
+                            {
+                                    <text>
+                                    $("#subCountyId").val('@Model.SubCountyID').trigger('change');
+                                    </text>
+                            }
+                        })
+                        .fail(function() {
+                            $("#subCountyId").empty().append('<option value="">Error loading data</option>');
+                        });
+                }
+            });
+
+            // Sub County change handler - uses LocationsController
+            $("#subCountyId").change(function () {
+                var subCountyId = $(this).val();
+                resetDropdowns(1);
+
+                if (subCountyId) {
+                    setLoading('locationId', true);
+                    $.getJSON("/Locations/GetLocationsBySubCounty", { subCountyId: subCountyId })
+                        .done(function (data) {
+                            $("#locationId").empty().append('<option value="">-- Select Location --</option>');
+                            $.each(data, function (index, item) {
+                                $("#locationId").append('<option value="' + item.locationID + '">' + item.locationName + '</option>');
+                            });
+                            $("#locationId").prop('disabled', false);
+
+                            // If editing and we have a LocationID, select it
+                            @if (Model.LocationID.HasValue)
+                            {
+                                    <text>
+                                    $("#locationId").val('@Model.LocationID').trigger('change');
+                                    </text>
+                            }
+                        })
+                        .fail(function() {
+                            $("#locationId").empty().append('<option value="">Error loading data</option>');
+                        });
+                }
+            });
+
+            // Location change handler - uses LocationsController
+            $("#locationId").change(function () {
+                var locationId = $(this).val();
+                resetDropdowns(2);
+
+                if (locationId) {
+                    setLoading('subLocationId', true);
+                    $.getJSON("/Locations/GetSubLocationsByLocation", { locationId: locationId })
+                        .done(function (data) {
+                            $("#subLocationId").empty().append('<option value="">-- Select Sub Location --</option>');
+                            $.each(data, function (index, item) {
+                                $("#subLocationId").append('<option value="' + item.subLocationID + '">' + item.subLocationName + '</option>');
+                            });
+                            $("#subLocationId").prop('disabled', false);
+
+                            // If editing and we have a SubLocationID, select it
+                            @if (Model.SubLocationID.HasValue)
+                            {
+                                    <text>
+                                    $("#subLocationId").val('@Model.SubLocationID').trigger('change');
+                                    </text>
+                            }
+                        })
+                        .fail(function() {
+                            $("#subLocationId").empty().append('<option value="">Error loading data</option>');
+                        });
+                }
+            });
+
+            // Sub Location change handler - uses LocationsController
+            $("#subLocationId").change(function () {
+                var subLocationId = $(this).val();
+                $("#villageID").empty().append('<option value="">-- Select Village --</option>').prop('disabled', true);
+
+                if (subLocationId) {
+                    setLoading('villageID', true);
+                    $.getJSON("/Locations/GetVillagesBySubLocation", { subLocationId: subLocationId })
+                        .done(function (data) {
+                            $("#villageID").empty().append('<option value="">-- Select Village --</option>');
+                            $.each(data, function (index, item) {
+                                $("#villageID").append('<option value="' + item.villageID + '">' + item.villageName + '</option>');
+                            });
+                            $("#villageID").prop('disabled', false);
+
+                            // If editing and we have a VillageID, select it
+                            @if (Model.VillageID != null)
+                            {
+                                    <text>
+                                    $("#villageID").val('@Model.VillageID');
+                                    </text>
+                            }
+                        })
+                        .fail(function() {
+                            $("#villageID").empty().append('<option value="">Error loading data</option>');
+                        });
+                }
+            });
+
+            // Initialize dropdowns if values are present (for Edit view)
+            @if (Model.CountyID.HasValue)
+            {
+                    <text>
+                    // Set the county first
+                    $("#countyId").val('@Model.CountyID');
+
+                    // Then trigger the change to load subcounties
+                    setTimeout(function() {
+                        $("#countyId").trigger('change');
+                    }, 100);
+                    </text>
+            }
+            else
+            {
+                    <text>
+                    // For Create view, just make sure county is enabled
+                    $("#countyId").prop('disabled', false);
+                    </text>
+            }
+
+            // Enhanced program selection with visual feedback
+            $('.form-check-input[type="checkbox"]').change(function() {
+                const label = $(this).next('label');
+                if ($(this).is(':checked')) {
+                    label.addClass('border-success bg-light');
+                } else {
+                    label.removeClass('border-success bg-light');
+                }
+            });
+
+            // Initialize pre-selected programs
+            $('.form-check-input[type="checkbox"]:checked').each(function() {
+                $(this).next('label').addClass('border-success bg-light');
+            });
+        });
+    </script>
+}

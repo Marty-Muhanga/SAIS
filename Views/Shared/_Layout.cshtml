@@ -1,0 +1,243 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Social Assistance Information System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            margin-bottom: 1.5rem !important;
+        }
+
+        .card-header {
+            border-bottom: none;
+            padding: 1.5rem 2rem;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .form-label {
+            color: #374151;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+        }
+
+        .form-control-lg, .form-select-lg {
+            padding: 1rem 1.25rem;
+            font-size: 1.05rem;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-check-card .form-check-label {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid #e5e7eb !important;
+            padding: 1.5rem !important;
+        }
+
+            .form-check-card .form-check-label:hover {
+                border-color: #3b82f6 !important;
+                background-color: #f8fafc !important;
+            }
+
+        .form-check-card .form-check-input:checked + .form-check-label {
+            border-color: #059669 !important;
+            background-color: #f0fdf4 !important;
+        }
+
+        .shadow-sm {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+        }
+
+        .btn-lg {
+            padding: 0.85rem 1.75rem;
+            font-size: 1.05rem;
+        }
+
+        .input-group-text {
+            background-color: #f8fafc;
+            border: 2px solid #e5e7eb;
+            border-right: none;
+            padding: 0 1.25rem;
+        }
+
+        .input-group .form-control {
+            border-left: none;
+            padding-left: 0.5rem;
+        }
+
+            .input-group .form-control:focus {
+                border-left: none;
+            }
+
+        .input-group:focus-within .input-group-text {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+
+        /* Additional spacing improvements */
+        .row {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-check-card {
+            margin-bottom: 1.25rem;
+        }
+
+        .text-danger {
+            font-weight: 500;
+        }
+
+        .table th {
+            background-color: #f8fafc;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+            padding: 1rem 0.75rem;
+        }
+
+        .table td {
+            padding: 1rem 0.75rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            font-weight: 500;
+        }
+
+        .btn-sm {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .avatar-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .location-info {
+            max-width: 200px;
+        }
+
+        .program-tags {
+            max-width: 180px;
+        }
+
+        .empty-state {
+            padding: 3rem 2rem;
+        }
+
+        .pagination-lg .page-link {
+            padding: 0.75rem 1.25rem;
+            font-size: 1.05rem;
+        }
+
+        .text-danger {
+            font-weight: 500;
+        }
+
+        .g-4 {
+            gap: 1.5rem !important;
+        }
+
+        .btn-group .btn {
+            border-radius: 0.375rem;
+            margin-right: 0.25rem;
+        }
+
+            .btn-group .btn:last-child {
+                margin-right: 0;
+            }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Applicants" asp-action="Index">SAIS</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-controller="Applicants" asp-action="Index">Applicants</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-controller="Lookup" asp-action="Index">Lookups</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-controller="Locations" asp-action="Index">Locations</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-controller="Reports" asp-action="ExportToExcel">Reports</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - Social Assistance Information System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

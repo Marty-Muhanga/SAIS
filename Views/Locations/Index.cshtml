@@ -1,0 +1,372 @@
+﻿@model List<County>
+
+@{
+    ViewData["Title"] = "Geographical Hierarchy";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-12 col-xl-10">
+            <!-- Page Header -->
+            <div class="page-header mb-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h1 class="h3 mb-0 text-gray-800">
+                            <i class="fas fa-map-marked-alt me-2 text-primary"></i>
+                            Geographical Hierarchy
+                        </h1>
+                        <p class="text-muted mb-0">Manage counties, sub-counties, locations, sub-locations and villages</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Geography Tree -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-sitemap me-2"></i>
+                        Administrative Structure
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model != null && Model.Any())
+                    {
+                        <div class="geography-tree">
+                            @foreach (var county in Model)
+                            {
+                                <div class="county-level mb-4">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <h5 class="fw-bold text-primary mb-0">
+                                            <i class="fas fa-landmark me-2"></i>
+                                            @county.CountyName (@county.CountyCode)
+                                        </h5>
+                                        <button class="btn btn-sm btn-outline-primary ms-3" data-bs-toggle="modal" data-bs-target="#addSubCountyModal" data-county-id="@county.CountyID">
+                                            <i class="fas fa-plus me-1"></i> Add Sub-County
+                                        </button>
+                                    </div>
+
+                                    @if (county.SubCounties != null && county.SubCounties.Any())
+                                    {
+                                        <div class="subcounty-level ps-4">
+                                            @foreach (var subCounty in county.SubCounties.OrderBy(sc => sc.SubCountyName))
+                                            {
+                                                <div class="mb-3">
+                                                    <div class="d-flex align-items-center mb-2">
+                                                        <h6 class="fw-semibold text-success mb-0">
+                                                            <i class="fas fa-map-marked me-2"></i>
+                                                            @subCounty.SubCountyName (@subCounty.SubCountyCode)
+                                                        </h6>
+                                                        <button class="btn btn-sm btn-outline-success ms-3" data-bs-toggle="modal" data-bs-target="#addLocationModal" data-subcounty-id="@subCounty.SubCountyID">
+                                                            <i class="fas fa-plus me-1"></i> Add Location
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- Debug Info (can be removed later) -->
+                                                    <div class="alert alert-info py-1 px-2 mb-2">
+                                                        <small>
+                                                            SubCountyID: @subCounty.SubCountyID |
+                                                            Locations: @subCounty.Locations?.Count
+                                                        </small>
+                                                    </div>
+
+                                                    @if (subCounty.Locations != null && subCounty.Locations.Any())
+                                                    {
+                                                        <div class="location-level ps-4">
+                                                            @foreach (var location in subCounty.Locations.OrderBy(l => l.LocationName))
+                                                            {
+                                                                <div class="mb-3">
+                                                                    <div class="d-flex align-items-center mb-2">
+                                                                        <h6 class="fw-semibold text-info mb-0">
+                                                                            <i class="fas fa-map-pin me-2"></i>
+                                                                            @location.LocationName (@location.LocationCode)
+                                                                        </h6>
+                                                                        <button class="btn btn-sm btn-outline-info ms-3" data-bs-toggle="modal" data-bs-target="#addSubLocationModal" data-location-id="@location.LocationID">
+                                                                            <i class="fas fa-plus me-1"></i> Add Sub-Location
+                                                                        </button>
+                                                                    </div>
+
+                                                                    @if (location.SubLocations != null && location.SubLocations.Any())
+                                                                    {
+                                                                        <div class="sublocation-level ps-4">
+                                                                            @foreach (var subLocation in location.SubLocations.OrderBy(sl => sl.SubLocationName))
+                                                                            {
+                                                                                <div class="mb-3">
+                                                                                    <div class="d-flex align-items-center mb-2">
+                                                                                        <h6 class="fw-semibold text-warning mb-0">
+                                                                                            <i class="fas fa-map-signs me-2"></i>
+                                                                                            @subLocation.SubLocationName (@subLocation.SubLocationCode)
+                                                                                        </h6>
+                                                                                        <button class="btn btn-sm btn-outline-warning ms-3" data-bs-toggle="modal" data-bs-target="#addVillageModal" data-sublocation-id="@subLocation.SubLocationID">
+                                                                                            <i class="fas fa-plus me-1"></i> Add Village
+                                                                                        </button>
+                                                                                    </div>
+
+                                                                                    @if (subLocation.Villages != null && subLocation.Villages.Any())
+                                                                                    {
+                                                                                        <div class="village-level ps-4">
+                                                                                            <ul class="list-group">
+                                                                                                @foreach (var village in subLocation.Villages.OrderBy(v => v.VillageName))
+                                                                                                {
+                                                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                                        <span>
+                                                                                                            <i class="fas fa-home me-2"></i>
+                                                                                                            @village.VillageName (@village.VillageCode)
+                                                                                                        </span>
+                                                                                                    </li>
+                                                                                                }
+                                                                                            </ul>
+                                                                                        </div>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <div class="alert alert-light py-2 px-3 mb-0">
+                                                                                            <i class="fas fa-info-circle me-2"></i>
+                                                                                            No villages added yet
+                                                                                        </div>
+                                                                                    }
+                                                                                </div>
+                                                                            }
+                                                                        </div>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <div class="alert alert-light py-2 px-3 mb-0">
+                                                                            <i class="fas fa-info-circle me-2"></i>
+                                                                            No sub-locations added yet
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="alert alert-light py-2 px-3 mb-0">
+                                                            <i class="fas fa-info-circle me-2"></i>
+                                                            No locations added yet (SubCountyID: @subCounty.SubCountyID)
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="alert alert-light py-2 px-3 mb-0">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            No sub-counties added yet
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            No counties found in the system.
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Add County Button -->
+            <div class="d-grid">
+                <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#addCountyModal">
+                    <i class="fas fa-plus me-2"></i>
+                    Add New County
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Add County Modal -->
+<div class="modal fade" id="addCountyModal" tabindex="-1" aria-labelledby="addCountyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="addCountyModalLabel">
+                    <i class="fas fa-landmark me-2"></i>
+                    Add New County
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="AddCounty" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="countyCode" class="form-label">County Code</label>
+                        <input type="text" class="form-control" id="countyCode" name="CountyCode" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="countyName" class="form-label">County Name</label>
+                        <input type="text" class="form-control" id="countyName" name="CountyName" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save County</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add SubCounty Modal -->
+<div class="modal fade" id="addSubCountyModal" tabindex="-1" aria-labelledby="addSubCountyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="addSubCountyModalLabel">
+                    <i class="fas fa-map-marked me-2"></i>
+                    Add New Sub-County
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="AddSubCounty" method="post">
+                <input type="hidden" id="countyId" name="CountyID">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="subCountyCode" class="form-label">Sub-County Code</label>
+                        <input type="text" class="form-control" id="subCountyCode" name="SubCountyCode" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="subCountyName" class="form-label">Sub-County Name</label>
+                        <input type="text" class="form-control" id="subCountyName" name="SubCountyName" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Save Sub-County</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Location Modal -->
+<div class="modal fade" id="addLocationModal" tabindex="-1" aria-labelledby="addLocationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="addLocationModalLabel">
+                    <i class="fas fa-map-pin me-2"></i>
+                    Add New Location
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="AddLocation" method="post">
+                <input type="hidden" id="subCountyId" name="SubCountyID">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="locationCode" class="form-label">Location Code</label>
+                        <input type="text" class="form-control" id="locationCode" name="LocationCode" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="locationName" class="form-label">Location Name</label>
+                        <input type="text" class="form-control" id="locationName" name="LocationName" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-info">Save Location</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add SubLocation Modal -->
+<div class="modal fade" id="addSubLocationModal" tabindex="-1" aria-labelledby="addSubLocationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title" id="addSubLocationModalLabel">
+                    <i class="fas fa-map-signs me-2"></i>
+                    Add New Sub-Location
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="AddSubLocation" method="post">
+                <input type="hidden" id="locationId" name="LocationID">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="subLocationCode" class="form-label">Sub-Location Code</label>
+                        <input type="text" class="form-control" id="subLocationCode" name="SubLocationCode" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="subLocationName" class="form-label">Sub-Location Name</label>
+                        <input type="text" class="form-control" id="subLocationName" name="SubLocationName" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning">Save Sub-Location</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Village Modal -->
+<div class="modal fade" id="addVillageModal" tabindex="-1" aria-labelledby="addVillageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-secondary text-white">
+                <h5 class="modal-title" id="addVillageModalLabel">
+                    <i class="fas fa-home me-2"></i>
+                    Add New Village
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="AddVillage" method="post">
+                <input type="hidden" id="subLocationId" name="SubLocationID">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="villageCode" class="form-label">Village Code</label>
+                        <input type="text" class="form-control" id="villageCode" name="VillageCode" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="villageName" class="form-label">Village Name</label>
+                        <input type="text" class="form-control" id="villageName" name="VillageName" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-dark">Save Village</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Set the parent ID when modal is shown
+        $('#addSubCountyModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var countyId = button.data('county-id');
+            $('#countyId').val(countyId);
+        });
+
+        $('#addLocationModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var subCountyId = button.data('subcounty-id');
+            $('#subCountyId').val(subCountyId);
+        });
+
+        $('#addSubLocationModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var locationId = button.data('location-id');
+            $('#locationId').val(locationId);
+        });
+
+        $('#addVillageModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var subLocationId = button.data('sublocation-id');
+            $('#subLocationId').val(subLocationId);
+        });
+    </script>
+}

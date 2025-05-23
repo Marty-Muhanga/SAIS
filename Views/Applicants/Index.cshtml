@@ -1,0 +1,549 @@
+@model SAIS.ViewModels.SearchViewModel
+@{
+    ViewData["Title"] = "Applicants";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Page Header -->
+            <div class="page-header mb-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h1 class="h3 mb-0 text-white">
+                            <i class="fas fa-users me-2"></i>
+                            Applicants Management
+                        </h1>
+                        <p class="text-white-50 mb-0">Search, filter and manage social assistance applicants</p>
+                    </div>
+                    <div>
+                        <a asp-action="Create" class="btn btn-light btn-lg">
+                            <i class="fas fa-plus me-1"></i>
+                            Create New Application
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Filters -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-search me-2"></i>
+                        Search & Filter
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Index" method="get">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-3">
+                                <label asp-for="SearchTerm" class="form-label">Search</label>
+                                <input asp-for="SearchTerm" class="form-control" placeholder="Name, ID, Phone..." value="@Model.SearchTerm" />
+                            </div>
+                            <div class="col-md-2">
+                                <label asp-for="StatusID" class="form-label">Status</label>
+                                <select asp-for="StatusID" class="form-control"
+                                        asp-items="@(new SelectList(Model.Statuses ?? new List<ApplicationStatusLookup>(), "StatusID", "StatusName", Model.StatusID))">
+                                    <option value="">-- All --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label asp-for="FromDate" class="form-label">From Date</label>
+                                <input asp-for="FromDate" type="date" class="form-control" value="@Model.FromDate?.ToString("yyyy-MM-dd")" />
+                            </div>
+                            <div class="col-md-2">
+                                <label asp-for="ToDate" class="form-label">To Date</label>
+                                <input asp-for="ToDate" type="date" class="form-control" value="@Model.ToDate?.ToString("yyyy-MM-dd")" />
+                            </div>
+                            <div class="col-md-3">
+                                <label for="countyId" class="form-label">County</label>
+                                <select class="form-control" id="countyId" name="countyId"
+                                        asp-items="@(new SelectList(Model.Counties ?? new List<County>(), "CountyID", "CountyName", Model.CountyID))">
+                                    <option value="">-- All --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-3">
+                                <label asp-for="SubCountyID" class="form-label">Sub County</label>
+                                <select asp-for="SubCountyID" class="form-control" id="subCountyId" name="subCountyId"
+                                        asp-items="@(new SelectList(Model.SubCounties ?? new List<SubCounty>(), "SubCountyID", "SubCountyName", Model.SubCountyID))">
+                                    <option value="">-- All --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="locationId" class="form-label">Location</label>
+                                <select class="form-control" id="locationId" name="locationId"
+                                        asp-items="@(new SelectList(Model.Locations ?? new List<Location>(), "LocationID", "LocationName", Model.LocationID))">
+                                    <option value="">-- All --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="subLocationId" class="form-label">Sub Location</label>
+                                <select class="form-control" id="subLocationId" name="subLocationId"
+                                        asp-items="@(new SelectList(Model.SubLocations ?? new List<SubLocation>(), "SubLocationID", "SubLocationName", Model.SubLocationID))">
+                                    <option value="">-- All --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="villageId" class="form-label">Village</label>
+                                <select class="form-control" id="villageId" name="villageId"
+                                        asp-items="@(new SelectList(Model.Villages ?? new List<Village>(), "VillageID", "VillageName", Model.VillageID))">
+                                    <option value="">-- All --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary me-2">
+                                    <i class="fas fa-search me-1"></i>
+                                    Search
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    <i class="fas fa-refresh me-1"></i>
+                                    Reset
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-table me-2"></i>
+                        Search Results
+                        @if (Model?.Applicants?.Count() > 0)
+                        {
+                            <span class="badge bg-light text-dark ms-2">@Model.Applicants.Count() found</span>
+                        }
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model?.Applicants != null && Model.Applicants.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>ID Number</th>
+                                        <th>Age</th>
+                                        <th>Sex</th>
+                                        <th>Marital Status</th>
+                                        <th>Location</th>
+                                        <th>Programs</th>
+                                        <th>Status</th>
+                                        <th>Application Date</th>
+                                        <th width="150">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Applicants)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div>
+                                                    <strong>@Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.MiddleName) @Html.DisplayFor(modelItem => item.LastName)</strong>
+                                                    @if (!string.IsNullOrEmpty(item.Telephone))
+                                                    {
+                                                        <br><small class="text-muted">@item.Telephone</small>
+                                                    }
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-light text-dark">@Html.DisplayFor(modelItem => item.IDNumber)</span>
+                                            </td>
+                                            <td>@Html.DisplayFor(modelItem => item.Age)</td>
+                                            <td>
+                                                <span class="badge bg-info">@Html.DisplayFor(modelItem => item.Sex.SexName)</span>
+                                            </td>
+                                            <td>@Html.DisplayFor(modelItem => item.MaritalStatus.StatusName)</td>
+                                            <td>
+                                                @if (item.Village?.VillageName != null)
+                                                {
+                                                    <div>
+                                                        <strong>@item.Village.VillageName</strong>
+                                                        @if (item.Village.SubLocation?.SubLocationName != null)
+                                                        {
+                                                            <br><small>@item.Village.SubLocation.SubLocationName</small>
+                                                            @if (item.Village.SubLocation.Location?.LocationName != null)
+                                                            {
+                                                                <br><small>@item.Village.SubLocation.Location.LocationName</small>
+                                                                @if (item.Village.SubLocation.Location.SubCounty?.County?.CountyName != null)
+                                                                {
+                                                                    <br><small class="text-muted">@item.Village.SubLocation.Location.SubCounty.County.CountyName</small>
+                                                                }
+                                                            }
+                                                        }
+                                                    </div>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.ApplicantPrograms != null && item.ApplicantPrograms.Any())
+                                                {
+                                                    @foreach (var program in item.ApplicantPrograms.Where(ap => ap.Program != null).Take(2))
+                                                    {
+                                                        <span class="badge bg-success me-1 mb-1">@program.Program.ProgramName</span>
+                                                    }
+                                                    @if (item.ApplicantPrograms.Count() > 2)
+                                                    {
+                                                        <span class="badge bg-secondary">+@(item.ApplicantPrograms.Count() - 2)</span>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <small class="text-muted">None</small>
+                                                }
+                                            </td>
+                                            <td>
+                                                @{
+                                                    var statusClass = item.Status?.StatusName?.ToLower() switch
+                                                    {
+                                                        "pending" => "bg-warning",
+                                                        "approved" => "bg-success",
+                                                        "rejected" => "bg-danger",
+                                                        _ => "bg-secondary"
+                                                    };
+                                                }
+                                                <span class="badge @statusClass">@Html.DisplayFor(modelItem => item.Status.StatusName)</span>
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ApplicationDate)
+                                                @if (item.ApplicationDate != null)
+                                                {
+                                                    <br><small class="text-muted">@((DateTime.Now - item.ApplicationDate).Days) days ago</small>
+                                                }
+                                            </td>
+                                            <td>
+                                                <a asp-action="Details" asp-route-id="@item.ApplicantID" class="btn btn-info btn-sm mb-1">Details</a>
+                                                <a asp-action="Edit" asp-route-id="@item.ApplicantID" class="btn btn-warning btn-sm mb-1">Edit</a>
+                                                <a asp-action="Delete" asp-route-id="@item.ApplicantID" class="btn btn-danger btn-sm mb-1"
+                                                   onclick="return confirm('Delete this applicant?')">Delete</a>
+                                                @if (!string.Equals(item.Status?.StatusName, "approved", StringComparison.OrdinalIgnoreCase))
+                                                {
+                                                    <a asp-action="Approve" asp-route-id="@item.ApplicantID" class="btn btn-success btn-sm mb-1"
+                                                       onclick="return confirm('Approve this application?')">Approve Case</a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">No Applicants Found</h5>
+                            <p class="text-muted">Try adjusting your search criteria or create a new application.</p>
+                            <a asp-action="Create" class="btn btn-primary">
+                                <i class="fas fa-plus me-1"></i>
+                                Create New Application
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            @if (Model?.Applicants != null && Model.Applicants.Any())
+            {
+               
+                    var currentPage = Model?.CurrentPage ?? 1;
+                    var totalPages = Model?.TotalPages ?? 1;
+                    var prevDisabled = currentPage == 1 ? "disabled" : "";
+                    var nextDisabled = currentPage >= totalPages ? "disabled" : "";
+                
+
+                <div class="mt-4">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item @prevDisabled">
+                                <a class="page-link"
+                                   asp-action="Index"
+                                   asp-route-CurrentPage="@(currentPage - 1)"
+                                   asp-route-SearchTerm="@Model.SearchTerm"
+                                   asp-route-StatusID="@Model.StatusID"
+                                   asp-route-FromDate="@Model.FromDate?.ToString("yyyy-MM-dd")"
+                                   asp-route-ToDate="@Model.ToDate?.ToString("yyyy-MM-dd")"
+                                   asp-route-CountyID="@Model.CountyID"
+                                   asp-route-SubCountyID="@Model.SubCountyID"
+                                   asp-route-LocationID="@Model.LocationID"
+                                   asp-route-SubLocationID="@Model.SubLocationID"
+                                   asp-route-VillageID="@Model.VillageID">Previous</a>
+                            </li>
+                            @for (int i = Math.Max(1, currentPage - 2); i <= Math.Min(totalPages, currentPage + 2); i++)
+                            {
+                                <li class="page-item @(i == currentPage ? "active" : "")">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-CurrentPage="@i"
+                                       asp-route-SearchTerm="@Model.SearchTerm"
+                                       asp-route-StatusID="@Model.StatusID"
+                                       asp-route-FromDate="@Model.FromDate?.ToString("yyyy-MM-dd")"
+                                       asp-route-ToDate="@Model.ToDate?.ToString("yyyy-MM-dd")"
+                                       asp-route-CountyID="@Model.CountyID"
+                                       asp-route-SubCountyID="@Model.SubCountyID"
+                                       asp-route-LocationID="@Model.LocationID"
+                                       asp-route-SubLocationID="@Model.SubLocationID"
+                                       asp-route-VillageID="@Model.VillageID">@i</a>
+                                </li>
+                            }
+                            <li class="page-item @nextDisabled">
+                                <a class="page-link"
+                                   asp-action="Index"
+                                   asp-route-CurrentPage="@(currentPage + 1)"
+                                   asp-route-SearchTerm="@Model.SearchTerm"
+                                   asp-route-StatusID="@Model.StatusID"
+                                   asp-route-FromDate="@Model.FromDate?.ToString("yyyy-MM-dd")"
+                                   asp-route-ToDate="@Model.ToDate?.ToString("yyyy-MM-dd")"
+                                   asp-route-CountyID="@Model.CountyID"
+                                   asp-route-SubCountyID="@Model.SubCountyID"
+                                   asp-route-LocationID="@Model.LocationID"
+                                   asp-route-SubLocationID="@Model.SubLocationID"
+                                   asp-route-VillageID="@Model.VillageID">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Enhanced cascading dropdowns with loading states
+            function setLoading(elementId, isLoading) {
+                const element = $('#' + elementId);
+                if (isLoading) {
+                    element.prop('disabled', true).html('<option value="">Loading...</option>');
+                } else {
+                    element.prop('disabled', false);
+                }
+            }
+
+            function resetDropdowns(fromLevel) {
+                const dropdowns = ['subCountyId', 'locationId', 'subLocationId', 'villageId'];
+                const startIndex = Math.max(0, fromLevel);
+
+                for (let i = startIndex; i < dropdowns.length; i++) {
+                    const dropdown = $('#' + dropdowns[i]);
+                    dropdown.empty().append('<option value="">-- All --</option>');
+                    dropdown.prop('disabled', true);
+                }
+            }
+
+            // County change handler - uses LocationsController
+            $("#countyId").change(function () {
+                var countyId = $(this).val();
+                resetDropdowns(0);
+
+                if (countyId) {
+                    setLoading('subCountyId', true);
+                    $.getJSON("/Locations/GetSubCountiesByCounty", { countyId: countyId })
+                        .done(function (data) {
+                            $("#subCountyId").empty().append('<option value="">-- All --</option>');
+                            $.each(data, function (index, item) {
+                                $("#subCountyId").append('<option value="' + item.subCountyID + '">' + item.subCountyName + '</option>');
+                            });
+                            $("#subCountyId").prop('disabled', false);
+
+                            // If we have a preselected SubCountyID, select it
+                            @if (Model.SubCountyID.HasValue)
+                            {
+                                    <text>
+                                    $("#subCountyId").val('@Model.SubCountyID').trigger('change');
+                                    </text>
+                            }
+                        })
+                        .fail(function() {
+                            $("#subCountyId").empty().append('<option value="">Error loading data</option>');
+                        });
+                }
+            });
+
+            // Sub County change handler - uses LocationsController
+            $("#subCountyId").change(function () {
+                var subCountyId = $(this).val();
+                resetDropdowns(1);
+
+                if (subCountyId) {
+                    setLoading('locationId', true);
+                    $.getJSON("/Locations/GetLocationsBySubCounty", { subCountyId: subCountyId })
+                        .done(function (data) {
+                            $("#locationId").empty().append('<option value="">-- All --</option>');
+                            $.each(data, function (index, item) {
+                                $("#locationId").append('<option value="' + item.locationID + '">' + item.locationName + '</option>');
+                            });
+                            $("#locationId").prop('disabled', false);
+
+                            // If we have a preselected LocationID, select it
+                            @if (Model.LocationID.HasValue)
+                            {
+                                    <text>
+                                    $("#locationId").val('@Model.LocationID').trigger('change');
+                                    </text>
+                            }
+                        })
+                        .fail(function() {
+                            $("#locationId").empty().append('<option value="">Error loading data</option>');
+                        });
+                }
+            });
+
+            // Location change handler - uses LocationsController
+            $("#locationId").change(function () {
+                var locationId = $(this).val();
+                resetDropdowns(2);
+
+                if (locationId) {
+                    setLoading('subLocationId', true);
+                    $.getJSON("/Locations/GetSubLocationsByLocation", { locationId: locationId })
+                        .done(function (data) {
+                            $("#subLocationId").empty().append('<option value="">-- All --</option>');
+                            $.each(data, function (index, item) {
+                                $("#subLocationId").append('<option value="' + item.subLocationID + '">' + item.subLocationName + '</option>');
+                            });
+                            $("#subLocationId").prop('disabled', false);
+
+                            // If we have a preselected SubLocationID, select it
+                            @if (Model.SubLocationID.HasValue)
+                            {
+                                    <text>
+                                    $("#subLocationId").val('@Model.SubLocationID').trigger('change');
+                                    </text>
+                            }
+                        })
+                        .fail(function() {
+                            $("#subLocationId").empty().append('<option value="">Error loading data</option>');
+                        });
+                }
+            });
+
+            // Sub Location change handler - uses LocationsController
+            $("#subLocationId").change(function () {
+                var subLocationId = $(this).val();
+                $("#villageId").empty().append('<option value="">-- All --</option>').prop('disabled', true);
+
+                if (subLocationId) {
+                    setLoading('villageId', true);
+                    $.getJSON("/Locations/GetVillagesBySubLocation", { subLocationId: subLocationId })
+                        .done(function (data) {
+                            $("#villageId").empty().append('<option value="">-- All --</option>');
+                            $.each(data, function (index, item) {
+                                $("#villageId").append('<option value="' + item.villageID + '">' + item.villageName + '</option>');
+                            });
+                            $("#villageId").prop('disabled', false);
+
+                            // If we have a preselected VillageID, select it
+                            @if (Model.VillageID.HasValue)
+                            {
+                                    <text>
+                                    $("#villageId").val('@Model.VillageID');
+                                    </text>
+                            }
+                        })
+                        .fail(function() {
+                            $("#villageId").empty().append('<option value="">Error loading data</option>');
+                        });
+                }
+            });
+
+            // Initialize dropdowns if values are present
+            @if (Model.CountyID.HasValue)
+            {
+                    <text>
+                    // Set the county first
+                    $("#countyId").val('@Model.CountyID');
+
+                    // Then trigger the change to load subcounties
+                    setTimeout(function() {
+                        $("#countyId").trigger('change');
+                    }, 100);
+                    </text>
+            }
+        });
+    </script>
+
+    <style>
+     
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+
+        .card-header {
+            border-bottom: none;
+            padding: 1rem 1.5rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+            .form-control:focus, .form-select:focus {
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            }
+
+        .shadow-sm {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
+        }
+
+        .table th {
+            background-color: #f8fafc;
+            border-bottom: 2px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+            padding: 0.75rem;
+        }
+
+        .table td {
+            padding: 0.75rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f8fafc;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            font-weight: 500;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+            margin-right: 0.25rem;
+        }
+
+        .btn-lg {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+        }
+    </style>
+}
+
